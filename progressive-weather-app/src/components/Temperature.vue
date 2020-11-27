@@ -75,6 +75,7 @@ section {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .temperature__value {
@@ -93,6 +94,10 @@ section {
     font-size: 2em;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.75);
+}
+
+.temperature__scale a {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .temperature__high {

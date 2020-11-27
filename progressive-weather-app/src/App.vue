@@ -1,22 +1,38 @@
 <template>
   <div id="app">
     <div class="app" :class="period">
-      <WeatherApp :class="period"></WeatherApp>
-      <AppCredits :year="year" :class="period"></AppCredits>
+      <header>
+        <AppNavbar></AppNavbar>
+      </header>
+      <router-view :fetchedCode="fetchedCode"/>
     </div>
   </div>
 </template>
 
 <script>
-import WeatherApp from './components/WeatherApp'
-import AppCredits from './components/AppCredits'
+
+import AppNavbar from '@/components/AppNavbar'
 
 export default {
   name: 'App',
 
   components: {
-    WeatherApp,
-    AppCredits
+    AppNavbar
+  },
+
+  data: {
+    fetchedCode: {}
+  },
+  created() {
+    fetch('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js')
+    .then(
+      r => r.text()
+    )
+    .then(
+      t => {
+        this.fetchedCode = t
+        console.log(this.fetchedCode)
+    })
   },
 
   data() {
@@ -26,10 +42,6 @@ export default {
   },
 
   computed: {
-    year() {
-      return this.date.getFullYear();
-    },
-
     period() {
       let hour = this.date.getHours();
 
@@ -88,5 +100,11 @@ a {
 
 .app--night a:hover {
   color: rgba(0, 0, 0, 0.5);
+}
+
+header {
+  position: absolute;
+  display: block;
+  top: 40px;
 }
 </style>

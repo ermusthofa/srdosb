@@ -23,6 +23,7 @@ footer {
   position: absolute;
   bottom: 10px;
   visibility: hidden;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 @media screen and (min-width: 450px) {

@@ -41,6 +41,7 @@ section {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .cloudiness img {
