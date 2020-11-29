@@ -6,6 +6,7 @@ metadata:
 data:
   plugins.txt: |
     saferestart
+    blueocean
     kubernetes
     workflow-aggregator
     pipeline-stage-view
@@ -13,6 +14,7 @@ data:
     workflow-multibranch
     matrix-project:1.18
     git
+    github
 
   jenkins-restart.sh: |
     #!/bin/bash

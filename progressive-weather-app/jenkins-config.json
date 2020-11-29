@@ -1,0 +1,14 @@
+{
+  "build": {
+    "env_vars": [
+      {
+        "key": "NODE_ENV",
+        "value": "production"
+      },
+      {
+        "key": "VUE_APP_PUBLIC_PATH",
+        "value": "https://cdnjs.cloudflare.com"
+      }
+    ]
+  }
+}
