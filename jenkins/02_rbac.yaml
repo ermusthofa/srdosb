@@ -1,0 +1,35 @@
+# Service Account
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jenkins-master
+  namespace: jenkins-build
+
+# Role
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: jenkins-master
+  namespace: jenkins-build
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "pods/exec", "events"]
+  verbs: ["watch", "list", "get", "create", "update", "patch", "delete"]
+
+# Role Binding
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: jenkins-master
+  namespace: jenkins-build
+subjects:
+- kind: ServiceAccount
+  name: jenkins-master
+  namespace: jenkins-build
+roleRef:
+  kind: Role
+  name: jenkins-master
+  apiGroup: rbac.authorization.k8s.io

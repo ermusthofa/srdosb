@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: jenkins-build
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      serviceAccount: jenkins-master
+      containers:
+      - name: jenkins
+        image: jenkins/jenkins:lts
+        env:
+        - name: JAVA_OPTS
+          value: "-Djenkins.install.runSetupWizard=false"
+        - name: CODE_COMMIT_SOURCE_URL
+          value: "https://github.com/ermusthofa/expetiment.git"
+        - name: JENKINS_USER
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-envar
+              key: jenkins-user
+        - name: JENKINS_PASS
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-envar
+              key: jenkins-pass
+        - name: JENKINS_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-envar
+              key: jenkins-email-admin
+        - name: JENKINS_URL
+          valueFrom:
+            secretKeyRef:
+              name: jenkins-envar
+              key: jenkins-url
+        ports:
+        - containerPort: 8080
+        - containerPort: 50000
+        volumeMounts:
+        - name: jenkins-home
+          mountPath: /var/jenkins_home
+        - name: groovy-init-scripts
+          mountPath: /var/jenkins_home/init.groovy.d
+        - name: jenkins-addons
+          mountPath: /opt
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "/usr/local/bin/install-plugins.sh < /opt/plugins.txt && ./opt/jenkins-restart.sh"]
+      volumes:
+      - name: jenkins-home
+        emptyDir: {}
+      - name: groovy-init-scripts
+        configMap:
+          name: jenkins-groovy-init-scripts
+          defaultMode: 0755
+      - name: jenkins-addons
+        configMap:
+          name: jenkins-addons
+          defaultMode: 0755

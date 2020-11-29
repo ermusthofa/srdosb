@@ -1,0 +1,104 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-groovy-init-scripts
+  namespace: jenkins-build
+data:
+  01-user.groovy: |
+    import jenkins.model.*
+    import hudson.security.*
+
+    def env = System.getenv()
+
+    def instance = Jenkins.getInstance()
+
+    def hudsonRealm = new HudsonPrivateSecurityRealm(false)
+    hudsonRealm.createAccount(env.JENKINS_USER, env.JENKINS_PASS)
+    instance.setSecurityRealm(hudsonRealm)
+
+    def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
+    
+    strategy.setAllowAnonymousRead(false)
+    instance.setAuthorizationStrategy(strategy)
+
+    instance.save()
+
+  02-jenkins-set-email-and-url.groovy: |
+    import jenkins.model.*
+    import jenkins.model.JenkinsLocationConfiguration
+
+    def env = System.getenv()
+
+    def jkLoConf = JenkinsLocationConfiguration.get()
+
+    jkLoConf.setUrl(env.JENKINS_URL)
+    jkLoConf.setAdminAddress(env.JENKINS_EMAIL)
+
+    jkLoConf.save()
+
+  03-cloud-kubernetes.groovy: |
+    import org.csanchez.jenkins.plugins.kubernetes.*
+    import jenkins.model.*
+
+    def instance = Jenkins.getInstance()
+    
+    instance.setNumExecutors(0)
+
+    def cloud = new KubernetesCloud(
+      'kubernetes',
+      null,
+      'https://kubernetes.default:443',
+      'jenkins-build',
+      'http://jenkins.jenkins-build:8080/',
+      '10', 0, 0, 5
+    )
+    cloud.setSkipTlsVerify(true)
+    cloud.setMaxRequestsPerHost(30)
+
+    instance.clouds.replace(cloud)
+    instance.save()
+
+  04-multibranch-pipeline.groovy: |
+    /* Adds a multibranch pipeline job to Jenkins */
+    import hudson.model.*
+    import hudson.plugins.git.extensions.impl.UserIdentity
+    import hudson.util.PersistedList
+    import jenkins.*
+    import jenkins.branch.*
+    import jenkins.model.*
+    import jenkins.model.Jenkins
+    import jenkins.plugins.git.*
+    import jenkins.plugins.git.traits.*
+    import jenkins.scm.impl.trait.RegexSCMHeadFilterTrait
+    import com.cloudbees.hudson.plugins.folder.computed.PeriodicFolderTrigger
+    import org.jenkinsci.plugins.workflow.multibranch.*
+
+    def env = System.getenv()
+
+    Jenkins jenkins = Jenkins.instance
+
+    String jenkinsJobName = "srdosb"
+
+    def dirName = jenkins.getItem(jenkinsJobName)
+    if (dirName == null) {
+      dirName = jenkins.createProject(WorkflowMultiBranchProject.class, jenkinsJobName)
+    }
+
+    String sourceScript = "Jenkinsfile"
+    dirName.getProjectFactory().setScriptPath(sourceScript)
+
+    String remote = env.CODE_COMMIT_SOURCE_URL
+    GitSCMSource gitSCMSource = new GitSCMSource(remote)
+    BranchSource branchSource = new BranchSource(gitSCMSource)
+
+
+    PersistedList sources = dirName.getSourcesList()
+    sources.clear()
+    sources.add(branchSource)
+
+
+    def traits = []
+    traits.add(new BranchDiscoveryTrait())
+    gitSCMSource.setTraits(traits)
+
+    dirName.addTrigger(new PeriodicFolderTrigger("1m"))

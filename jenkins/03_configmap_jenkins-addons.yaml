@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-addons
+  namespace: jenkins-build
+data:
+  plugins.txt: |
+    saferestart
+    kubernetes
+    workflow-aggregator
+    pipeline-stage-view
+    pipeline-utility-steps
+    workflow-multibranch
+    matrix-project:1.18
+    git
+
+  jenkins-restart.sh: |
+    #!/bin/bash
+
+    mv /usr/share/jenkins/ref/plugins/* /var/jenkins_home/plugins/
+    
+    JENKINS_CRUMB=$(curl --silent --cookie-jar /tmp/cookies \
+      -u $JENKINS_USER:$JENKINS_PASS \
+      'http://localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' \
+    )
+
+    curl -X POST -I -v \
+      -u $JENKINS_USER:$JENKINS_PASS \
+      --cookie /tmp/cookies \
+      -H "Content-Type:text/xml" \
+      -H $JENKINS_CRUMB \
+      http://localhost:8080/restart
