@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: jenkins-addons
+  name: jenkins-plugins
   namespace: jenkins-build
 data:
   plugins.txt: |

@@ -58,7 +58,7 @@ data:
     instance.clouds.replace(cloud)
     instance.save()
 
-  04-multibranch-pipeline.groovy: |
+  04-srdosb-multibranch-pipeline.groovy: |
     /* Adds a multibranch pipeline job to Jenkins */
     import hudson.model.*
     import hudson.plugins.git.extensions.impl.UserIdentity
@@ -87,7 +87,7 @@ data:
     String sourceScript = "Jenkinsfile"
     dirName.getProjectFactory().setScriptPath(sourceScript)
 
-    String remote = env.CODE_COMMIT_SOURCE_URL
+    String remote = env.SRDOSB_CODE_COMMIT_SOURCE_URL
     GitSCMSource gitSCMSource = new GitSCMSource(remote)
     BranchSource branchSource = new BranchSource(gitSCMSource)
 
@@ -100,3 +100,5 @@ data:
     def traits = []
     traits.add(new BranchDiscoveryTrait())
     gitSCMSource.setTraits(traits)
+
+    dirName.addTrigger(new PeriodicFolderTrigger("1m"))
