@@ -3,6 +3,9 @@ module.exports = {
     configureWebpack: {
         optimization: {
           splitChunks: false
+        },
+        output: {
+            filename: 'js/minifiedscript.js'
         }
     },
     css: {

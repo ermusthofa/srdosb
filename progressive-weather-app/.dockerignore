@@ -4,4 +4,3 @@ node_modules/
 
 # Ignore files
 package-lock.json
-yarn.lock

@@ -24,7 +24,8 @@ export default {
     fetchedCode: {}
   },
   created() {
-    fetch('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.min.js')
+    const vueCDNUrl = process.env.VUE_APP_CDN_URL + '/js/minifiedscript.js'
+    fetch( vueCDNUrl )
     .then(
       r => r.text()
     )
