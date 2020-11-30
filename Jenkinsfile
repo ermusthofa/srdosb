@@ -28,7 +28,7 @@ spec:
     tty: true
     privileged: true
   - name: ansible
-    image: cytopia/ansible:2.8-tools
+    image: cytopia/ansible:2.8-aws
     command:
     - cat
     tty: true
@@ -138,7 +138,7 @@ spec:
           export ANSIBLE_CONFIG="${WORKSPACE}/ansible/aws.cfg"
 
           cd ${WORKSPACE}/ansible
-          ansible-playbook -e "passed_in_hosts=application_weather" -e "build_version=${build_version}" deply-progressive-weather.yml
+          ansible-playbook -e "passed_in_hosts=application_weather" -e "build_version=${BRANCH_NAME}-${build_version}" deploy-progressive-weather.yaml
         """
       }
     }
