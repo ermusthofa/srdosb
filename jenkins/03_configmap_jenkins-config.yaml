@@ -5,4 +5,4 @@ metadata:
   namespace: jenkins-build
 data:
   JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
-  SRDOSB_CODE_COMMIT_SOURCE_URL: "https://github.com/ermusthofa/expetiment.git"
+  SRDOSB_CODE_COMMIT_SOURCE_URL: "https://github.com/ermusthofa/srdosb.git"
