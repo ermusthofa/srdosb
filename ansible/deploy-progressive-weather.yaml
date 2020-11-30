@@ -1,0 +1,56 @@
+---
+# variables from dynamic inventory
+- name: variables from dynamic inventory
+  hosts: "{{ passed_in_hosts }}" 
+  remote_user: ubuntu
+  become: true
+  become_method: sudo
+  become_user: root
+ 
+  tasks:
+  - name: display variables from dynamic inventory
+    vars:
+      myVar: |
+        Name: {{ tags.Name }} 
+        Instance Id: {{ instance_id }} 
+        Region: {{ placement.region }} 
+        Zone: {{ placement.availability_zone }} 
+        Instance Type: {{  instance_type }}
+        Public Ip: {{ public_ip_address }}
+        Private Ip: {{ private_ip_address }}
+        Image Id: {{ image_id }}
+        VPC Id: {{ vpc_id}}
+        Security Groups: {{ security_groups }}
+        Subnet: {{ subnet_id }}
+        Launch: {{ launch_time }}
+        Architecture: {{ architecture }}
+        Hypervisor: {{ hypervisor }}
+        Virtualization: {{ virtualization_type }}
+        Key Name: {{ key_name }}
+        Root Device: {{ root_device_name }}
+        Tags: {{ tags }}
+    debug: 
+      msg: "{{ myVar.split('\n') }}"
+
+  - name: install docker engine
+    action: >
+      {{ ansible_pkg_mgr }} name=docker state=present update_cache=yes
+
+  - name: install docker compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-{{ ansible_system }}-{{ ansible_userspace_architecture }}
+      dest: /usr/local/bin/docker-compose
+      mode: 'u+x,g+x,o+x'
+
+  - name: ansible create directory
+    file:
+      path: /opt/progressive-weather
+      state: directory
+
+  - name: docker-compose template
+    template:
+      src: ./template/docker-compose.yml.j2
+      dest: /opt/progressive-weather/docker-compose.yml
+
+  - name: run docker-compose up
+    command: chdir=/opt/progressive-weather docker-compose up -d

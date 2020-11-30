@@ -27,6 +27,12 @@ spec:
     - cat
     tty: true
     privileged: true
+  - name: ansible
+    image: cytopia/ansible:2.8-tools
+    command:
+    - cat
+    tty: true
+    privileged: true
   volumes:
   - name: dockersock
     hostPath:
@@ -117,6 +123,26 @@ spec:
         """
       }
     }
+
+    stage('Deploy to VM') {
+      container("ansible") {
+
+        config.build.env_vars.each() {
+          env."${it.key}" = "${it.value}"
+        }
+
+        build_version = version.version
+
+        sh """
+
+          export ANSIBLE_CONFIG="${WORKSPACE}/ansible/aws.cfg"
+
+          cd ${WORKSPACE}/ansible
+          ansible-playbook -e "passed_in_hosts=application_weather" -e "build_version=${build_version}" deply-progressive-weather.yml
+        """
+      }
+    }
+
   }
 
 }
