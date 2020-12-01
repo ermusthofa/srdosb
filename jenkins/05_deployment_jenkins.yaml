@@ -16,7 +16,7 @@ spec:
       serviceAccount: jenkins-master
       containers:
       - name: jenkins
-        image: jenkins/jenkins:lts
+        image: jenkins/jenkins:2.268
         env:
         - name: JENKINS_USER
           valueFrom:
@@ -55,13 +55,6 @@ spec:
           postStart:
             exec:
               command: ["/bin/sh", "-c", "/usr/local/bin/install-plugins.sh < /opt/plugins.txt && ./opt/jenkins-restart.sh"]
-      - name: node
-        image: node:fermium-alpine3.12
-        env:
-        - name: SMEE_URL
-          value: "https://smee.io/xVTJfvsObCZza8C"
-        command: ["/bin/sh"]
-        args: ["-c", "npm install --global smee-client && smee --url ${SMEE_URL} --path /github-webhook/ --port 8080"]
       volumes:
       - name: jenkins-home
         emptyDir: {}

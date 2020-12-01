@@ -102,3 +102,118 @@ data:
     gitSCMSource.setTraits(traits)
 
     dirName.addTrigger(new PeriodicFolderTrigger("1m"))
+
+  05-aws-access-key.groovy: |
+    import jenkins.model.Jenkins
+    import com.cloudbees.plugins.credentials.domains.Domain
+    import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+    import com.cloudbees.plugins.credentials.CredentialsScope
+    import hudson.util.Secret
+
+    def env = System.getenv()
+
+    instance = Jenkins.instance
+    domain = Domain.global()
+    store = instance.getExtensionList(
+      "com.cloudbees.plugins.credentials.SystemCredentialsProvider")[0].getStore()
+
+    secretText = new StringCredentialsImpl(
+      CredentialsScope.GLOBAL,
+      "AWS_ACCESS_KEY",
+      "AWS Access Key",
+      Secret.fromString(env.AWS_ACCESS_KEY)
+    )
+
+    store.addCredentials(domain, secretText)
+
+  06-aws-secret-key.groovy: |
+    import jenkins.model.Jenkins
+    import com.cloudbees.plugins.credentials.domains.Domain
+    import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+    import com.cloudbees.plugins.credentials.CredentialsScope
+    import hudson.util.Secret
+
+    def env = System.getenv()
+
+    instance = Jenkins.instance
+    domain = Domain.global()
+    store = instance.getExtensionList(
+      "com.cloudbees.plugins.credentials.SystemCredentialsProvider")[0].getStore()
+
+    secretText = new StringCredentialsImpl(
+      CredentialsScope.GLOBAL,
+      "AWS_SECRET_KEY",
+      "AWS Secret Key",
+      Secret.fromString(env.AWS_SECRET_KEY)
+    )
+
+    store.addCredentials(domain, secretText)
+
+  07-docker-hub-username.groovy: |
+    import jenkins.model.Jenkins
+    import com.cloudbees.plugins.credentials.domains.Domain
+    import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+    import com.cloudbees.plugins.credentials.CredentialsScope
+    import hudson.util.Secret
+
+    def env = System.getenv()
+
+    instance = Jenkins.instance
+    domain = Domain.global()
+    store = instance.getExtensionList(
+      "com.cloudbees.plugins.credentials.SystemCredentialsProvider")[0].getStore()
+
+    secretText = new StringCredentialsImpl(
+      CredentialsScope.GLOBAL,
+      "DOCKER_HUB_USERNAME",
+      "Docker Hub Username",
+      Secret.fromString(env.DOCKER_HUB_USERNAME)
+    )
+
+    store.addCredentials(domain, secretText)
+
+  08-docker-hub-password.groovy: |
+    import jenkins.model.Jenkins
+    import com.cloudbees.plugins.credentials.domains.Domain
+    import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+    import com.cloudbees.plugins.credentials.CredentialsScope
+    import hudson.util.Secret
+
+    def env = System.getenv()
+
+    instance = Jenkins.instance
+    domain = Domain.global()
+    store = instance.getExtensionList(
+      "com.cloudbees.plugins.credentials.SystemCredentialsProvider")[0].getStore()
+
+    secretText = new StringCredentialsImpl(
+      CredentialsScope.GLOBAL,
+      "DOCKER_HUB_PASSWORD",
+      "Docker Hub Password",
+      Secret.fromString(env.DOCKER_HUB_PASSWORD)
+    )
+
+    store.addCredentials(domain, secretText)
+
+  09-target-vm-private-key.groovy: |
+    import jenkins.model.Jenkins
+    import com.cloudbees.plugins.credentials.domains.Domain
+    import org.jenkinsci.plugins.plaincredentials.impl.StringCredentialsImpl
+    import com.cloudbees.plugins.credentials.CredentialsScope
+    import hudson.util.Secret
+
+    def env = System.getenv()
+
+    instance = Jenkins.instance
+    domain = Domain.global()
+    store = instance.getExtensionList(
+      "com.cloudbees.plugins.credentials.SystemCredentialsProvider")[0].getStore()
+
+    secretText = new StringCredentialsImpl(
+      CredentialsScope.GLOBAL,
+      "TARGET_VM_PRIVATE_KEY",
+      "Target VM Private Key",
+      Secret.fromString(env.TARGET_VM_PRIVATE_KEY)
+    )
+
+    store.addCredentials(domain, secretText)

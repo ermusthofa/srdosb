@@ -20,4 +20,4 @@ build:
 run:
 	rm -rf artifacts
 	mkdir -p artifacts/js
-	$(RUN) $(SERVICE_NAME):$(VERSION) cp /usr/share/nginx/html/js/minifiedscript.js /artifacts/js
+	$(RUN) $(SERVICE_NAME):$(VERSION) sh -c "cat /usr/share/nginx/html/js/minifiedscript.js" > artifacts/js/minifiedscript.js

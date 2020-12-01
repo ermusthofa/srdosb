@@ -6,3 +6,8 @@ metadata:
 data:
   JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
   SRDOSB_CODE_COMMIT_SOURCE_URL: "https://github.com/ermusthofa/srdosb.git"
+  AWS_ACCESS_KEY: "put_your_aws_access_key"
+  AWS_SECRET_KEY: "put_your_aws_secret_key"
+  DOCKER_HUB_USERNAME: "srdosb"
+  DOCKER_HUB_PASSWORD: "ask_me_for_the_passwd_this_is_pub_repo"
+  TARGET_VM_PRIVATE_KEY: "put_your_base_64_private_key"

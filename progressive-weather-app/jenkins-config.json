@@ -7,19 +7,11 @@
       },
       {
         "key": "VUE_APP_CDN_URL",
-        "value": "https://hh-image-dev.s3-ap-southeast-1.amazonaws.com"
+        "value": "https://cached-resource.s3-ap-southeast-1.amazonaws.com"
       },
       {
         "key": "VUE_AWS_BUCKET",
-        "value": "hh-image-dev"
-      },
-      {
-        "key": "AWS_ACCESS_KEY_ID",
-        "value": "redacted"
-      },
-      {
-        "key": "AWS_SECRET_ACCESS_KEY",
-        "value": "redacted"
+        "value": "cached-resource"
       },
       {
         "key": "AWS_DEFAULT_REGION",
